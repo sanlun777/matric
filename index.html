@@ -38,7 +38,7 @@
       //Para que no lo abra el buscador como archivo
       event.preventDefault();
       console.log('Si sirve');
-
+      tMatriz = document.getElementById("matrize");
       //Iterar los archivos, si existen 1 o más de 1 de ellos
       if(event.dataTransfer.items){
           for(var i = 0; i < event.dataTransfer.items.length; i++){
@@ -49,7 +49,7 @@
                   lector.onload = function(){
                     //Quitar listeners, para que no se disparen cada ves que se ingrese un valor
 
-                    cambiat(1,1);
+                    cambiat(1,1,"matrize");
                     //Dividir todo el string a filas
                     var filas = lector.result.split(/\r?\n/);
                     for(var e = filas.length - 1; e >= 0; e--)
@@ -71,22 +71,102 @@
 
                       if(columna.length > gm.get("matrize")){
                         //Cambiar tamaño, si es que excede el máximo
-                        cambiat(filas.length, columna.length);
+                        cambiat(filas.length, columna.length, "matrize");
                       }
                       for(var k = 0; k < columna.length; k++){
                         //Le asignamos el valor del string. Si es un valor inválido, se traducirá a un 0 al subirse al array interno
-                        tMatriz.getElementById((i+1) + ',' + (k+1)).value = columna[k];
+                        document.getElementById("matrize" + (i+1) + ',' + (k+1)).value = columna[k];
                       }
                     }
 
                     for(var i = 0; i < gm.get("matrize"); i++)
                       for(var j = 0; j < gn.get("matrize"); j++){
-                        var campo = tMatriz.getElementById((i + 1) + ',' + (j + 1));
+                        var campo = document.getElementById("matrize" + (i + 1) + ',' + (j + 1));
                         if(campo.value == '')
                           campo.value = '[V]';
                         }
                     calculaMat();
                     tMatriz.setAttribute('onchange', 'calculaMat();');
+                    }
+                    else{
+                        //TODO: Mensaje de que el archivo es inválido (en HTML)
+                        console.log("El archivo no es válido: Menos de una fila detectada");
+                    }
+
+                    };
+
+                    //Leemos como texto
+                    lector.readAsText(archivo);
+              }
+
+              else console.log(i + 'no es un archivo.')
+          }
+      }
+
+      else{
+          for(var i = 0; i < event.dataTransfer.files.length; i++) {
+              console.log('Acceder archivos')
+          }
+      }
+  };
+
+  function manejoSueltagr(event){
+
+      //Para que no lo abra el buscador como archivo
+      event.preventDefault();
+      console.log('Si sirve');
+      var tGram = document.getElementById("gram");
+      //Iterar los archivos, si existen 1 o más de 1 de ellos
+      if(event.dataTransfer.items){
+          for(var i = 0; i < event.dataTransfer.items.length; i++){
+              if(event.dataTransfer.items[i].kind === 'file'){
+                  var archivo = event.dataTransfer.items[i].getAsFile();
+                  var lector = new FileReader();
+                  //Cuando se cargue el archivo:
+                  lector.onload = function(){
+                    //Quitar listeners, para que no se disparen cada ves que se ingrese un valor
+
+                    cambiat(1,1,"gramsh");
+                    //Dividir todo el string a filas, por medio de espacios
+                    var filas = lector.result.split(/\r?\n/);
+                    for(var e = filas.length - 1; e >= 0; e--)
+                      if(filas[e] == '')
+                        filas.splice(e, 1);
+                    console.log('filas:');
+                    console.log(filas);
+                    //Checar que haya, por lo menos, una vector(fila)
+                    if(filas.length >= 1){
+                    tGram.removeAttribute('onchange');
+                    for(var i = 0; i < filas.length; i++){
+                      var columna = filas[i].split(' ');
+                      console.log('columnas:');
+                      console.log(columna);
+                      var j = columna.length;
+                      //Tumbamos espacios vacios
+                      for(var e = columna.length - 1; e >= 0; e--)
+                        if(columna[e] == '')
+                          columna.splice(e, 1);
+
+                      if(columna.length > gn.get("gramsh")){
+                        //Cambiar tamaño, si es que excede el máximo
+                        cambiat(columna.length, filas.length,"gramsh");
+                      }
+                      for(var k = 0; k < columna.length; k++){
+                        //Le asignamos el valor del string. Si es un valor inválido, se traducirá a un 0 al subirse al array interno
+                        //Valor de fila
+                       document.getElementById("gramsh" + (k+1) + ',' + (i+1)).value = columna[k];
+                      }
+                    }
+
+                    //Se toman los espacios vacios como erroneos
+                    for(var i = 0; i < gm.get("gramsh"); i++)
+                      for(var j = 0; j < gn.get("gramsh"); j++){
+                        var campo = document.getElementById("gramsh" + (i + 1) + ',' + (j + 1));
+                        if(campo.value == '')
+                          campo.value = '[V]';
+                        }
+                    calculaGram();
+                    tGram.setAttribute('onchange', 'calculaGram();');
                     }
                     else{
                         //TODO: Mensaje de que el archivo es inválido (en HTML)
