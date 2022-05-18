@@ -186,6 +186,8 @@ input[name="currOp"]{
 	
 }
 
+/*Cambio de base*/
+
 #mcambio{
 
 	margin: auto;
@@ -211,9 +213,7 @@ input[name="currOp"]{
 	background-color:#DCDCDC;
 }
 
-
 #tces{
-
 
 	margin: auto;
 	background-color:#DCDCDC;
@@ -223,8 +223,48 @@ input[name="currOp"]{
 	border:#DCDCDC;
 	border-radius: 8px;
 
+}
+
+/*Gram-Schmid*/
+
+#gram{
+
+	margin: auto;
+	background-color:#FFFFFF;
+	text-align: center;
+	width: 50%;
+	height:50%;
+
+	border:#DCDCDC;
+	border-radius: 8px;
+	table-layout:fixed;
+
 
 }
+
+#gram th tbody{
+	display:inline-block;
+
+}
+
+#gram table{
+
+	background-color:#DCDCDC;
+}
+
+#tges{
+
+	margin: auto;
+	background-color:#DCDCDC;
+	text-align: center;
+	width: 70%;
+	height:70%;
+	border:#DCDCDC;
+	border-radius: 8px;
+
+}
+
+
 
 
 
