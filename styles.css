@@ -246,7 +246,6 @@ input[name="currOp"]{
 	display:inline-block;
 
 }
-
 #gram table{
 
 	background-color:#DCDCDC;
@@ -263,11 +262,6 @@ input[name="currOp"]{
 	border-radius: 8px;
 
 }
-
-
-
-
-
 
 .suma-resta:not([hidden="true"]){
 	

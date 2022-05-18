@@ -525,7 +525,7 @@
 
     //Preparamos para presentar las bases encontradas en vertical
     var print = transpose(mod, nVec, mm);
-    muestraMat(print, mm, nVec, "gram");
+    muestraMat(print, mm, nVec, "ges");
   }
 
   function calculaBase(){
@@ -634,12 +634,16 @@
   //  ret[k] = mat[k];
   //}
 
-  for(var k = (i+1)*n; k < (m-1)*n; k++){
-    mat[k] = mat[k+n];
+  var desp = i*n;
+  var desp2 = (i+1)*n;
+
+  for(var k = 0; k < (m-(i+1))*n; k++){
+    mat[desp + k] = mat[desp2 + k];
   }
 
   //Eliminando espacio de uno de los vectores
-  mat.length -= n;
+  for(var k = 0; k < n; k++)
+    mat.pop();
 
   //return ret;
   }
@@ -820,7 +824,7 @@
       for(var k = 0; k < i; k++){
           //calculamos el factor c
           var c = dot(mat, m, n, k, i);
-          c = c.div(dot(mat, m, n, i, i));
+          c = c.div(dot(mat, m, n, k, k));
           //Uno de los vectores que restaremos al vector actual
           var vresta = iCopiaV(mat, m, n, k);
           //Solo es un vector
