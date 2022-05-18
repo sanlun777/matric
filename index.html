@@ -434,19 +434,91 @@
     document.getElementById("grammsh-container").removeAttribute('hidden');
   }
 
+  function hide(id){
+    document.getElementById(id).setAttribute("hidden", true);
+  }
+
+  function unhide(id){
+    document.getElementById(id).removeAttribute("hidden");
+  }
+
   function calculaBase(){
-    if(recogeMat("matrize")){
+    var baseA;
+    var baseB;
+
+    var mm = gm.get("baseA");
+
+    hide("alertald");
+    hide("errorld");
+    hide("errorrec");
+
+    if(recogeMat("baseA")){
+      baseA = matglob.slice();
+        if(recogeMat("baseB"))
+          baseB = matglob.slice();
+        else{
+          unhide("errorrec");
+          return false;
+          }
     }
+    else{
+      unhide("errorrec");
+      return false;
+    }
+
+    var aInv = baseA.slice();
+
+    //Sacamos la transpuesta y le hacemos gauss para determinar dimension, puede justificarse por la naturaleza de las operaciones que se realizan en las operaciones de Gauss-Jordan
+
+    transpose2(aInv, mm, mm);
+    gaussJordan(aInv, mm, mm);
+
+
+    var bInv = baseB.slice();
+
+    transpose2(bInv, mm, mm);
+    gaussJordan(bInv, mm, mm);
+
+    var print;
+    //Si son de la misma dimensión,
+
+    var res1 = identestn(aInv, mm, mm);
+    var res2 = identestn(bInv, mm, mm);
+
+    if(res1 == res2){
+      print = cambiobase(baseA, baseB, mm);
+      //Imprimimos matriz de cambio de base, gg
+
+      muestraMat(print, mm, mm, 'ces');
+
+    }
+
+    else{
+      unhide("errorld");
+      return false;
+    }
+
   }
 
   //Bloque de manejo de Gauss Jordan
 
   function identestc(mat, m, n){
     for(var i = 0; i < m*n; i += (n + 1)){
-      if(!mat[i].equals(1)) return false;
+      if(!mat[i].equals(new Fraction(1))) return false;
     }
 
     return true;
+  }
+
+  //Retorna número de unos, -1 si todos son unos
+  function identestn(mat, m, n){
+   var k = 0;
+    for(var i = 0; i < m*n; i += (n + 1)){
+      if(!mat[i].equals(new Fraction(1))) return k;
+      k++;
+    }
+
+    return -1;
   }
 
     //Los elementos de la fila i se multiplican por el flotante s
@@ -574,6 +646,21 @@
     return matnew;
   }
 
+
+  //Solo funciona para m > n
+  function transpose2(mat, m, n){
+  var k = 1;
+  for(var i = 1; i < m; i++){
+    for(var j = 0; j < k; j++){
+       //swap
+       tmp = mat[i*n + j];
+       mat[i*n + j] = mat[j*m + i];
+       mat[j*m + i] = tmp;
+    }
+    if(k < n) k++;
+  }
+  }
+
   function dot(mat, m, n, i1 , i2){
   var offi1 = i1*n;
   var offi2 = i2*n;
@@ -586,11 +673,12 @@
 
   function grammsh(mat, m, n){
   //m es el número de vectores, n corresponde a las dimensiones
-  //tomaremos el primer vector como la base
+  //tomaremos el primer vector como la base de inicio.
   for(var i = 1; i < m;){
     //Operamos con todos los vectores anteriores al actual, que ya deberan ser base.
     var vtmp = new Array(n);
     iCopiaV(mat, m, n, i);
+    //Del primer vector, al anterior al actual
     for(var k = 0; k < i; k++){
         //calculamos el factor c
         var c = dot(mat, m, n, k, i);
@@ -598,9 +686,10 @@
         //Uno de los vectores que restaremos al vector actual
         var vresta = iCopiaV(mat, m, n, k);
         iMultiplica(vresta, 1, n, 0, c);
-        VRestaV(vtmp, vresta, n);
+        iRestaV(vtmp, vresta, n);
     }
 
+    //Si obtenemos el vector 0,
     if(vecZ(vtmp, 1, n, i))
       vecCrop(mat, m, n, 1);
     else{
@@ -608,6 +697,40 @@
     }
 
   }
+  }
+
+  function grammsh2(mat, m, n){
+  //m es el número de vectores, n corresponde a las dimensiones
+  //tomaremos el primer vector como la base de inicio, por tanto iniciamos con segundo vector
+    for(var i = 1; i < m;){
+      //Operamos con todos los vectores anteriores al actual, que ya deberan ser base.
+      //Del primer vector, al anterior al actual (todos estos base)
+      for(var k = 0; k < i;){
+          //calculamos el factor c
+          var c = dot(mat, m, n, k, i);
+          c = c.div(dot(mat, m, n, k, k));
+          //Uno de los vectores que restaremos al vector actual
+          var vresta = iCopiaV(mat, m, n, k);
+          //Solo es un renglón, por lo tanto, es de 1xn, y accedemos este renglon(0), y lo multiplicamos por el factor
+          iMultiplica(vresta, 1, n, 0, c);
+          //Restamos a la base actual,
+          iRestaV(mat, m, n, i, vresta);
+      }
+
+      //Si obtenemos el vector 0,
+      if(vecZ(vtmp, 1, n, i)){
+      //Lo eliminamos de la base
+        vecCrop(mat, m, n, 1);
+        //Tendremos un vector menos, pero nos mantendremos en la misma posicion
+        m--;
+        }
+      else
+          //Avanzamos a la siguiente base de la forma convencional
+        k++;
+
+      //Para que la función que invoca conozca la dimension del e.v. formado por la base ortogonal que encontramos
+      return n;
+    }
   }
 
 
@@ -687,23 +810,30 @@
 
   function cambiobase(mata, matb, m){
   var matinv = new Array(2*m*m);
+  //Ponemos B en la izquierda y A en la derecha
   for(var i = 0; i < m*m; i+=m){
     for(var j = 0; j < m; j++){
       matinv[i*2 + j] = matb[i + j];
-    }
-    for(var j = m; j < 2*m; j++){
       matinv[i*2 + m + j] = mata[i + j];
     }
+    //for(var j = 0; j < m; j++){
+    //  matinv[i*2 + m + j] = mata[i + j];
+    //}
   }
 
+
+  //Jordanazo
   gaussJordan(matinv, m, 2*m);
 
+  //Matriz de retorno
   var ret = new Array(m*m);
 
   for(var i = 0; i < m*m; i+=m)
     for(var j = 0; j < m; j++)
       ret[i+j] = matinv[i*2+m+j];
 
+
+      return ret;
   }
 
 
@@ -776,7 +906,7 @@
         <tr>
           <th>
             <div id="table-container">
-              <table id="bases">
+              <table id="bases" onchange="calculaBase();">
                 <tr>
                   <th>
                     <h1>De:</h1>
@@ -869,24 +999,45 @@
           <th></th>
         </tr>
       </table>
+
+      <div id='mcambio'>
+        <h1>Matriz de Cambio de Base</h1>
+        <table id='tces'>
+          <tbody id='ces'>
+
+          </tbody>
+        </table>
+      </div>
+
+      <div id='alertald' hidden='true'>
+        <h1>Las bases que proporcionaste son ld</h1>
+      </div>
+
+      <div id='errorld' hidden='true'>
+        <h1>Las bases que proporcionaste son ld, y de distinta dimensión</h1>
+      </div>
+
+      <div id='errorrec' hidden='true'>
+        <h1>Hay un problema con los datos proporcionados</h1>
+      </div>
     </div>
     <div id="grammsh-container" ondragover="manejoArrastre(event);"
     ondrop="manejoSueltagr(event);" hidden="true">
-      <table id="matrize">
+      <table id="gramsh">
         <tr>
           <th>
             <table id='entrada' onchange='calculaMat();'>
-              <tbody id='matrizemat'>
-                <tr id='matrize1'>
-                  <th id='matrize1.1'><input id='matrize1,1'
+              <tbody id='gramshmat'>
+                <tr id='gramsh1'>
+                  <th id='gramsh1.1'><input id='gramsh1,1'
                   placeholder='0'></th>
-                  <th id='matrize1.2'><input id='matrize1,2'
+                  <th id='gramsh1.2'><input id='gramsh1,2'
                   placeholder='0'></th>
                 </tr>
-                <tr id='matrize2'>
-                  <th id='matrize2.1'><input id='matrize2,1'
+                <tr id='gramsh2'>
+                  <th id='gramsh2.1'><input id='gramsh2,1'
                   placeholder='0'></th>
-                  <th id='matrize2.2'><input id='matrize2,2'
+                  <th id='gramsh2.2'><input id='gramsh2,2'
                   placeholder='0'></th>
                 </tr>
               </tbody>
@@ -895,11 +1046,11 @@
           <th>
             <table>
               <tr>
-                <th><button id='matrizeredcol' class="suma-resta"
+                <th><button id='gramshredcol' class="suma-resta"
                 onclick=
-                'reduceColumna("matrize");'><span>-</span></button></th>
+                'reduceColumna("gramsh");'><span>-</span></button></th>
                 <th><button class="suma-resta" onclick=
-                'agregaColumna("matrize");'><span>+</span></button></th>
+                'agregaColumna("gramsh");'><span>+</span></button></th>
               </tr>
             </table>
           </th>
@@ -908,20 +1059,20 @@
           <th>
             <table>
               <tr>
-                <th><button id='matrizeredfil' class="suma-resta"
+                <th><button id='gramshredfil' class="suma-resta"
                 onclick=
-                'reduceFila("matrize");'><span>-</span></button></th>
+                'reduceFila("gramsh");'><span>-</span></button></th>
               </tr>
               <tr>
                 <th><button class="suma-resta" onclick=
-                'agregaFila("matrize");'><span>+</span></button></th>
+                'agregaFila("gramsh");'><span>+</span></button></th>
               </tr>
             </table>
           </th>
           <th></th>
         </tr>
       </table><button class="limpieza" onclick=
-      'limpiaMat("matrize");'>
+      'limpiaMat("gramsh");'>
       <div class="icono">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height=
         "16" fill="currentcolor" class="bi bi-trash-fill" viewbox=

@@ -186,6 +186,46 @@ input[name="currOp"]{
 	
 }
 
+#mcambio{
+
+	margin: auto;
+	background-color:#FFFFFF;
+	text-align: center;
+	width: 50%;
+	height:50%;
+
+	border:#DCDCDC;
+	border-radius: 8px;
+	table-layout:fixed;
+
+
+}
+
+#mcambio th tbody{
+	display:inline-block;
+
+}
+
+#mcambio table{
+
+	background-color:#DCDCDC;
+}
+
+
+#tces{
+
+
+	margin: auto;
+	background-color:#DCDCDC;
+	text-align: center;
+	width: 70%;
+	height:70%;
+	border:#DCDCDC;
+	border-radius: 8px;
+
+
+}
+
 
 
 
