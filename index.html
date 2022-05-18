@@ -745,7 +745,7 @@
   var matnew = new Array(m * n);
   for(var i = 0; i < m; i++)
     for(var j = 0; j < n; j++){
-       matnew[i*n + j] = mat[j*m + i];
+       //matnew[i*n + j] = mat[j*m + i];
        matnew[j*m + i] = mat[i*n + j];
     }
     return matnew;
