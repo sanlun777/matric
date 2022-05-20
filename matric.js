@@ -185,6 +185,86 @@ function manejoSueltagr(event) {
     }
 };
 
+function manejoSueltacba(event) {
+
+    //Para que no lo abra el buscador como archivo
+    event.preventDefault();
+    console.log('Si sirve');
+    var tBase = document.getElementById("cbaser");
+    //Iterar los archivos, si existen 1 o más de 1 de ellos
+    if (event.dataTransfer.items) {
+        for (var i = 0; i < event.dataTransfer.items.length; i++) {
+            if (event.dataTransfer.items[i].kind === 'file') {
+                var archivo = event.dataTransfer.items[i].getAsFile();
+                var lector = new FileReader();
+                //Cuando se cargue el archivo:
+                lector.onload = function() {
+                    //Quitar listeners, para que no se disparen cada ves que se ingrese un valor
+
+                    cambiat(1, 1, "cbase");
+                    //Dividir todo el string a filas, por medio de espacios
+                    var filas = lector.result.split(/\r?\n/);
+                    for (var e = filas.length - 1; e >= 0; e--)
+                        if (filas[e] == '')
+                            filas.splice(e, 1);
+                    console.log('filas:');
+                    console.log(filas);
+                    //Checar que haya, por lo menos, una vector(fila)
+                    if (filas.length >= 1) {
+                        tBase.removeAttribute('onchange');
+                        for (var i = 0; i < filas.length; i++) {
+                            var columna = filas[i].split(' ');
+                            console.log('columnas:');
+                            console.log(columna);
+                            var j = columna.length;
+                            //Tumbamos espacios vacios
+                            for (var e = columna.length - 1; e >= 0; e--)
+                                if (columna[e] == '')
+                                    columna.splice(e, 1);
+
+                            if (columna.length > gn.get("cbase")) {
+                                //Cambiar tamaño, si es que excede el máximo
+                                cambiat(columna.length, filas.length, "cbase");
+                            }
+                            for (var k = 0; k < columna.length; k++) {
+                                //Le asignamos el valor del string. Si es un valor inválido, se traducirá a un 0 al subirse al array interno
+                                //Valor de fila
+                                document.getElementById("cbase" + (k + 1) + ',' + (i + 1)).value = columna[k];
+                            }
+                        }
+
+                        //Se toman los espacios vacios como erroneos
+                        for (var i = 0; i < gm.get("cbase"); i++)
+                            for (var j = 0; j < gn.get("cbase"); j++) {
+                                var campo = document.getElementById("cbase" + (i + 1) + ',' + (j + 1));
+                                if (campo.value == '')
+                                    campo.value = '[V]';
+                            }
+                        calculaGram();
+                        tBase.setAttribute('onchange', 'calculaGram();');
+                    }
+                    else {
+                        //TODO: Mensaje de que el archivo es inválido (en HTML)
+                        console.log("El archivo no es válido: Menos de una fila detectada");
+                    }
+
+                };
+
+                //Leemos como texto
+                lector.readAsText(archivo);
+            }
+
+            else console.log(i + 'no es un archivo.')
+        }
+    }
+
+    else {
+        for (var i = 0; i < event.dataTransfer.files.length; i++) {
+            console.log('Acceder archivos')
+        }
+    }
+};
+
 
 
 //Bloque de manejo de entradas a la matriz
@@ -496,18 +576,28 @@ function muestraGJ() {
     document.getElementById("matriz-container").removeAttribute('hidden');
     document.getElementById("cambio-container").setAttribute('hidden', true);
     document.getElementById("grammsh-container").setAttribute('hidden', true);
+    document.getElementById("cbase-container").setAttribute('hidden', true);
 }
 
 function muestraCB() {
     document.getElementById("matriz-container").setAttribute('hidden', true);
     document.getElementById("cambio-container").removeAttribute('hidden');
     document.getElementById("grammsh-container").setAttribute('hidden', true);
+    document.getElementById("cbase-container").setAttribute('hidden', true);
 }
 
 function muestraGS() {
     document.getElementById("matriz-container").setAttribute('hidden', true);
     document.getElementById("cambio-container").setAttribute('hidden', true);
     document.getElementById("grammsh-container").removeAttribute('hidden');
+    document.getElementById("cbase-container").setAttribute('hidden', true);
+}
+
+function muestraComB() {
+    document.getElementById("matriz-container").setAttribute('hidden', true);
+    document.getElementById("cambio-container").setAttribute('hidden', true);
+    document.getElementById("grammsh-container").setAttribute('hidden', true);
+    document.getElementById("cbase-container").removeAttribute('hidden');
 }
 
 function hide(id) {
@@ -602,6 +692,30 @@ function calculaGram() {
     //Preparamos para presentar las bases encontradas en vertical
     var print = transpose(mod, nVec, mm);
     muestraMat(print, mm, nVec, "ges");
+}
+
+function calculaCbase() {
+    var mm = gm.get("cbase");
+    var nn = gn.get("cbase");
+    hide("advld");
+    //hide("cbase");
+
+    if (!recogeMat("cbase")) {
+        unhide("errorparsg");
+        return false;
+    }
+
+    var mod = transpose(matglob, mm, nn);
+    //La matriz se modifica por referencia, recordemos que es transpuesta
+    var bases = completaBase(mod, nn, mm, false);
+    var print = transpose(bases, mm, mm);
+    muestraMat(print, mm, mm, "bes");
+
+    mod = transpose(matglob, mm, nn);
+    bases = completaBase(mod, nn, mm, true);
+    print = transpose(bases, mm, mm);
+    muestraMat(print, mm, mm, "oes");
+
 }
 
 function calculaBase() {
@@ -924,18 +1038,6 @@ function grammsh2(mat, m, n, iInicial) {
     return m;
 }
 
-//Requiere de bases en horizontal
-function completaBase(mat, m, n) {
-    //Guardamos bases que debemos completar
-    var vecC = mat.slice();
-    //Hacemos Gauss-Jordan para identificar posibles vectores
-    //Esto funciona, debido a que las operaciones de Gauss-Jordan son válidas dentro de un espacio vectorial, considerando que cada fila fuese un vector.
-    //Gauss-Jordan nos ayuda a identificar columnas reducibles, con las cuales podemos sugerir un vector
-    gaussJordan(vecC, m, n);
-    //En donde se interrumpe la diagonal de 1's, podemos sugerir vectores de la forma (0, ... , 0, 1, 0, ... , 0);
-    //Estos vectores pueden completar la base, y son l.i.
-}
-
 //Intercambia i1 por i2
 function swap(st, i1, i2){
     var temp = i1;
@@ -945,26 +1047,30 @@ function swap(st, i1, i2){
 
 function vecUnoGen(mat, dim, unoloc){
     for(var i = 0; i < unoloc; i++)
-        mat.push(0);
-    mat.push(1);
+        mat.push(new Fraction(0));
+    mat.push(new Fraction(1));
     for(var i = unoloc + 1; i < dim; i++)
-        mat.push(0);
+        mat.push(new Fraction(0));
 }
 
 
 //Gauss-Jordan modificado, propone vectores si no encuentra un elemento no nulo en un renglon, y mantiene la ubicación de las bases no reducidas (?)
-function baseJordan(mat, m, n, tOrtogonal){
+function completaBase(mat, m, n, tOrtogonal){
     //Hacemos una copia de la matriz original, para tener las bases no alteradas
-    var mOrig = mat.splice();
+    var mOrig = [...mat];
+
+    //Hacemos Gauss-Jordan para identificar posibles vectores
+    //Esto funciona, debido a que las operaciones de Gauss-Jordan son válidas dentro de un espacio vectorial, considerando que cada fila fuese un vector.
+    //Gauss-Jordan nos ayuda a identificar columnas irreducibles, con las cuales podemos sugerir un vector
+
+    //En donde se interrumpe la diagonal de 1's, podemos sugerir vectores de la forma (0, ... , 0, 1, 0, ... , 0);
+    //Estos vectores pueden completar la base, y son l.i.
 
     var previ = 0;
-    var pos = new Array(m);
-    //Llenando posiciones
-    pos.forEach((element, index)=>{
-        element = index;
-    });
+    var pos = new Array();
+    for(var i = 0; i < m; i++)
+        pos.push(i);
     var vSugeridos = new Array();
-    var vSLen = 0;
     //console.log("En escalonado");
     for (var j = 0; j < n; j++) {
         //Sólo necesitamos contar desde la posición mínima posible del siguiente 1 principal
@@ -980,7 +1086,6 @@ function baseJordan(mat, m, n, tOrtogonal){
                     iIntercambio(mat, m, n, i, previ);
                     swap(pos, i, previ);
                 }
-
 
                 //Multiplica los elementos de la fila del contador de 1 principal de tal modo que m<i,j> = 1
                 iMultJ(mat, m, n, previ, j);
@@ -1003,7 +1108,6 @@ function baseJordan(mat, m, n, tOrtogonal){
         if(!c){
             //Agregamos una sugerencia de vector con j actual.
             vecUnoGen(vSugeridos, n, j);
-            vSLen++;
         }
         //console.log(mat);
     }
@@ -1014,7 +1118,7 @@ function baseJordan(mat, m, n, tOrtogonal){
     var mAnt = m;
 
     //Estamos recorriendo en orden inverso. Recordemos que los vectores cero irán a la parte inferior. Por lo tanto, cuando no encontremos uno, podemos terminar.
-    for(var i = m-1; i >= 0; i--){
+    for(var i = (m - 1); i >= 0; i--){
         if(!vecZ(mat, m, n, i))
             break;
         //Quitamos vector
@@ -1031,16 +1135,20 @@ function baseJordan(mat, m, n, tOrtogonal){
     var mSchmid = new Array();
     //Copiemos los vectores propuestos y las bases a un solo arreglo
     pos.forEach((loc)=>{
-        //Cortamos un vector con splice, y lo pegamos a los vectores iniciales con concat
-        mSchmid.concat(mOrig.splice(loc, n));
+        //Agregamos los vectores no reducidos
+        var disp = loc*n;
+        for(var i = disp; i < disp + n; i++)
+            mSchmid.push(mOrig[i]);
     });
 
     //Unimos las bases con los vectores sugeridos
-    mSchmid.concat(vSugeridos);
+    mSchmid = mSchmid.concat(vSugeridos);
 
-    //Aplicamos Gramm Schmidt, iniciando en el último vector de una base.
-    //Las bases no serán perpendiculares entre si, para no alterarlas, pero los vectores sugeridos serán perpendiculares a las bases
-    grammsh2(mSchmid, n, n, (tOrtogonal) ? (1) : (pos.length));
+    if(!tOrtogonal)
+        return mSchmid;
+
+    //Aplicamos Gramm Schmidt
+    grammsh2(mSchmid, n, n, 1);
 
     //La función que invoque a mShmid sabe que la dimensión será de n x n, debido a que se "completa" la base.
     //Intentos de usar matrices donde m > n resultarán en el colapso a una matriz n x n en Gauss Jordan, debido a teoremas.

@@ -32,6 +32,8 @@
         'muestraCB();'> <label for="cbrd">Cambio de base</label>
         <input type="radio" name="currOp" id="gsrd" onclick=
         'muestraGS();'> <label for="gjrd">Gramm-Shmidt</label>
+        <input type="radio" name="currOp" id="combrd" onclick=
+        'muestraComB();'> <label for="combrd">Completa Base</label>
       </div>
     </div>
     <div id="cambio-container" ondragover="manejoArrastre(event);"
@@ -217,7 +219,7 @@
       </div><span>Limpiar matriz</span></button>
 
       <div id='gram'>
-        <h1>Bases ortogonales</h1>
+        <h1>Base ortogonal</h1>
         <table id='tges'>
           <tbody id='ges'></tbody>
         </table>
@@ -234,6 +236,96 @@
       </div>
 
     </div>
+
+    <div id="cbase-container" ondragover="manejoArrastre(event);"
+    ondrop="manejoSueltacba(event);" hidden="true">
+      <table id="cbase">
+        <tr>
+          <th>
+            <table id='entrada' onchange='calculaCbase();'>
+              <tbody id='cbasemat'>
+                <tr id='cbase1'>
+                  <th id='cbase1.1'><input id='cbase1,1'
+                  placeholder='0'></th>
+                  <th id='cbase1.2'><input id='cbase1,2'
+                  placeholder='0'></th>
+                </tr>
+                <tr id='cbase2'>
+                  <th id='cbase2.1'><input id='cbase2,1'
+                  placeholder='0'></th>
+                  <th id='cbase2.2'><input id='cbase2,2'
+                  placeholder='0'></th>
+                </tr>
+              </tbody>
+            </table>
+          </th>
+          <th>
+            <table>
+              <tr>
+                <th><button id='cbaseredcol' class="suma-resta"
+                onclick=
+                'reduceColumna("cbase");'><span>-</span></button></th>
+                <th><button class="suma-resta" onclick=
+                'agregaColumna("cbase");'><span>+</span></button></th>
+              </tr>
+            </table>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <table>
+              <tr>
+                <th><button id='cbaseredfil' class="suma-resta"
+                onclick=
+                'reduceFila("cbase");'><span>-</span></button></th>
+              </tr>
+              <tr>
+                <th><button class="suma-resta" onclick=
+                'agregaFila("cbase");'><span>+</span></button></th>
+              </tr>
+            </table>
+          </th>
+          <th></th>
+        </tr>
+      </table><button class="limpieza" onclick=
+      'limpiaMat("cbase");'>
+      <div class="icono">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height=
+        "16" fill="currentcolor" class="bi bi-trash-fill" viewbox=
+        "0 0 16 16">
+        <path d=
+        "M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z">
+        </path></svg>
+      </div><span>Limpiar matriz</span></button>
+
+      <div id='cbaser'>
+        <h1>Base completada</h1>
+        <table id='tbes'>
+          <tbody id='bes'></tbody>
+        </table>
+      </div>
+
+      <div id='cbaseo'>
+        <h1>Base ortogonal</h1>
+        <table id='toes'>
+          <tbody id='oes'></tbody>
+        </table>
+      </div>
+
+      <div id='errorparsg' hidden="">
+        <h1>Hubo un error al analizar esta matriz. Las celdas
+        problemáticas, (y vacías, distinguidas por [V]) están
+        marcadas en rojo, puede modificarlas</h1>
+      </div>
+
+      <div id='advld' hidden="">
+        <h1>Los vectores proporcionados son l.d. Se genera, y se completa una base ortogonal para el e.v. generado por los vectores proporcionados</h1>
+      </div>
+
+    </div>
+
+
+
     <div id="matriz-container" ondragover="manejoArrastre(event);"
     ondrop="manejoSuelta(event);">
       <div id="menu" class="wrapped">
@@ -245,6 +337,8 @@
         "determinada" checked='true' onclick='calculaMat();'>
         <label for="determinada">Determinante</label>
       </div>
+
+
       <div id="table-container">
         <table id="matrize">
           <tr>

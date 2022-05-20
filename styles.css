@@ -263,6 +263,81 @@ input[name="currOp"]{
 
 }
 
+/*Completar bases*/
+
+#cbaser{
+
+	margin: auto;
+	background-color:#FFFFFF;
+	text-align: center;
+	width: 50%;
+	height:50%;
+
+	border:#DCDCDC;
+	border-radius: 8px;
+	table-layout:fixed;
+
+
+}
+
+#cbaser th tbody{
+	display:inline-block;
+
+}
+#cbaser table{
+
+	background-color:#DCDCDC;
+}
+
+#tbes{
+
+	margin: auto;
+	background-color:#DCDCDC;
+	text-align: center;
+	width: 70%;
+	height:70%;
+	border:#DCDCDC;
+	border-radius: 8px;
+
+}
+
+#cbaseo{
+
+	margin: auto;
+	background-color:#FFFFFF;
+	text-align: center;
+	width: 50%;
+	height:50%;
+
+	border:#DCDCDC;
+	border-radius: 8px;
+	table-layout:fixed;
+
+
+}
+
+#cbaseo th tbody{
+	display:inline-block;
+
+}
+#cbaseo table{
+
+	background-color:#DCDCDC;
+}
+
+#toes{
+
+	margin: auto;
+	background-color:#DCDCDC;
+	text-align: center;
+	width: 70%;
+	height:70%;
+	border:#DCDCDC;
+	border-radius: 8px;
+
+}
+
+
 .suma-resta:not([hidden="true"]){
 	
 	display: inline-block;
