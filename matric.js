@@ -738,6 +738,8 @@ function calculaBase() {
         }
     }
     else {
+        //Para calcular errores
+        recogeMat("baseB");
         unhide("errorrec");
         return false;
     }
