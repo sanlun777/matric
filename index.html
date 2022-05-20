@@ -31,7 +31,7 @@
         <input type="radio" name="currOp" id="cbrd" onclick=
         'muestraCB();'> <label for="cbrd">Cambio de base</label>
         <input type="radio" name="currOp" id="gsrd" onclick=
-        'muestraGS();'> <label for="gjrd">Gramm-Shmidt</label>
+        'muestraGS();'> <label for="gsrd">Gramm-Shmidt</label>
         <input type="radio" name="currOp" id="combrd" onclick=
         'muestraComB();'> <label for="combrd">Completa Base</label>
       </div>
@@ -44,15 +44,19 @@
             <div id="table-container">
               <table id="bases" onchange="calculaBase();">
                 <tr>
+				
                   <th>
                     <h1>De:</h1>
                   </th>
+				  <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
                   <th>
                     <h1>A:</h1>
                   </th>
                 </tr>
+				
                 <tr>
                   <th>
+				  
                     <table id='baseA'>
                       <tbody id='baseAmat'>
                         <tr id='baseA1'>
@@ -70,6 +74,7 @@
                       </tbody>
                     </table>
                   </th>
+				  <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                   <th>
                     <table id='baseB'>
                       <tbody id='baseBmat'>

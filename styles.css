@@ -29,7 +29,7 @@ font-family:Arial ;
 	text-align:center;
 	background-color: #4C0027;	
 	width:100%;
-	height: 80px;	
+	height: 130px;	
 	color: #fff;
 	font-family: 'Roboto', sans-serif;
 	font-weight: 500;
@@ -39,14 +39,15 @@ font-family:Arial ;
 
 #p-principal{
 	position: relative;
-	top:25%;	
+	top:5%;
+
 }
 
 #menu{
 	
 	background-color: #750550;
 	width: 100%;
-	height: 70px;
+	height: 110px;
 	
 	
 }
@@ -65,7 +66,7 @@ font-family:Arial ;
 	
 	margin: auto;
 	margin-top: 5%;
-	width: 50%;
+	width: 80%;
 	
 
 }
@@ -73,6 +74,7 @@ font-family:Arial ;
 
 table{
 	
+	margin:auto;
 	background-color: #FFDFE9;
 	border-radius: 5px;
 	text-align: center;
@@ -243,12 +245,19 @@ input[name="currOp"]{
 }
 
 #gram th tbody{
+
 	display:inline-block;
 
 }
 #gram table{
-
+	
 	background-color:#DCDCDC;
+}
+
+#gramsh{
+	
+	width: 60%;
+
 }
 
 #tges{
@@ -289,6 +298,8 @@ input[name="currOp"]{
 	background-color:#DCDCDC;
 }
 
+
+
 #tbes{
 
 	margin: auto;
@@ -299,6 +310,11 @@ input[name="currOp"]{
 	border:#DCDCDC;
 	border-radius: 8px;
 
+}
+
+#cbase{
+	
+	width:50%;
 }
 
 #cbaseo{
