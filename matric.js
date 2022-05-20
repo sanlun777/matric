@@ -185,6 +185,116 @@ function manejoSueltagr(event) {
     }
 };
 
+function manejoSueltacb(event) {
+
+    //Para que no lo abra el buscador como archivo
+    event.preventDefault();
+    console.log('Si sirve');
+    var tBaseA = document.getElementById("baseA");
+    var tBaseB = document.getElementById("baseB");
+    //Iterar los archivos, si existen 1 o más de 1 de ellos
+    if (event.dataTransfer.items) {
+        for (var i = 0; i < event.dataTransfer.items.length; i++) {
+            if (event.dataTransfer.items[i].kind === 'file') {
+                var archivo = event.dataTransfer.items[i].getAsFile();
+                var lector = new FileReader();
+                //Cuando se cargue el archivo:
+                lector.onload = function() {
+                    //Quitar listeners, para que no se disparen cada ves que se ingrese un valor
+
+                    cambiat(1, 1, "baseA");
+                    cambiat(1, 1, "baseB");
+                    //
+
+                    //Dividir el string en 2 bases, por medio de #
+                    var bases = lector.result.split('#');
+
+                    //Dividir todo el string a filas, por medio de espacios
+                    if(bases.length == 2){
+                        var filasA = bases[0].split(/\r?\n/);
+                        var filasB = bases[1].split(/\r?\n/);
+                        for (var e = filasA.length - 1; e >= 0; e--)
+                            if (filasA[e] == '')
+                                filasA.splice(e, 1);
+                        console.log('filasA:');
+                        console.log(filasA);
+
+                        for (var e = filasB.length - 1; e >= 0; e--)
+                            if (filasB[e] == '')
+                                filasB.splice(e, 1);
+                        console.log('filasB:');
+                        console.log(filasB);
+                        //Checar que haya, por lo menos, una vector(fila)
+                        if (filasA.length >= 1 && filasB.length >= 1) {
+                            tBaseA.removeAttribute('onchange');
+                            tBaseB.removeAttribute('onchange');
+
+                            var tam = tablaPrint("baseA", filasA, 0);
+                            tablaPrint("baseB", filasB, tam);
+
+                            calculaBase();
+                            tBaseA.setAttribute('onchange', 'calculaBase();');
+                            tBaseB.setAttribute('onchange', 'calculaBase();');
+                        }
+                        else {
+                            //TODO: Mensaje de que el archivo es inválido (en HTML)
+                            console.log("El archivo no es válido: Menos de una fila detectada");
+                        }
+                    }
+
+                };
+
+                //Leemos como texto
+                lector.readAsText(archivo);
+            }
+
+            else console.log(i + 'no es un archivo.')
+        }
+    }
+
+    else {
+        for (var i = 0; i < event.dataTransfer.files.length; i++) {
+            console.log('Acceder archivos')
+        }
+    }
+};
+
+function tablaPrint(mutado, filas, maxCLen) {
+    for (var i = 0; i < filas.length; i++) {
+        var columna = filas[i].split(' ');
+        console.log('columnas:');
+        console.log(columna);
+        var j = columna.length;
+        //Tumbamos espacios vacios
+        for (var e = columna.length - 1; e >= 0; e--)
+            if (columna[e] == '')
+                columna.splice(e, 1);
+
+        if (columna.length > gn.get(mutado)) {
+            maxCLen = (columna.length > maxCLen) ? (columna.length) : (maxCLen);
+            //Cambiar tamaño, si es que excede el máximo
+            cambiat(maxCLen, maxCLen, mutado);
+        }
+        if(maxCLen > i)
+            for (var k = 0; k < maxCLen; k++) {
+            //Le asignamos el valor del string. Si es un valor inválido, se traducirá a un 0 al subirse al array interno
+            //Valor de fila
+            document.getElementById(mutado + (k + 1) + ',' + (i + 1)).value = columna[k];
+            }
+    }
+
+    //Se toman los espacios vacios como erroneos
+    for (var i = 0; i < gm.get(mutado); i++)
+        for (var j = 0; j < gn.get(mutado); j++) {
+            var campo = document.getElementById(mutado + (i + 1) + ',' + (j + 1));
+            if (campo.value == '')
+                campo.value = '[V]';
+        }
+
+    return maxCLen;
+
+};
+
 function manejoSueltacba(event) {
 
     //Para que no lo abra el buscador como archivo
@@ -240,8 +350,8 @@ function manejoSueltacba(event) {
                                 if (campo.value == '')
                                     campo.value = '[V]';
                             }
-                        calculaGram();
-                        tBase.setAttribute('onchange', 'calculaGram();');
+                        calculaCbase();
+                        tBase.setAttribute('onchange', 'calculaCbase();');
                     }
                     else {
                         //TODO: Mensaje de que el archivo es inválido (en HTML)
@@ -1039,23 +1149,23 @@ function grammsh2(mat, m, n, iInicial) {
 }
 
 //Intercambia i1 por i2
-function swap(st, i1, i2){
+function swap(st, i1, i2) {
     var temp = i1;
     st[i1] = st[i2];
     st[i2] = temp;
 }
 
-function vecUnoGen(mat, dim, unoloc){
-    for(var i = 0; i < unoloc; i++)
+function vecUnoGen(mat, dim, unoloc) {
+    for (var i = 0; i < unoloc; i++)
         mat.push(new Fraction(0));
     mat.push(new Fraction(1));
-    for(var i = unoloc + 1; i < dim; i++)
+    for (var i = unoloc + 1; i < dim; i++)
         mat.push(new Fraction(0));
 }
 
 
 //Gauss-Jordan modificado, propone vectores si no encuentra un elemento no nulo en un renglon, y mantiene la ubicación de las bases no reducidas (?)
-function completaBase(mat, m, n, tOrtogonal){
+function completaBase(mat, m, n, tOrtogonal) {
     //Hacemos una copia de la matriz original, para tener las bases no alteradas
     var mOrig = [...mat];
 
@@ -1068,7 +1178,7 @@ function completaBase(mat, m, n, tOrtogonal){
 
     var previ = 0;
     var pos = new Array();
-    for(var i = 0; i < m; i++)
+    for (var i = 0; i < m; i++)
         pos.push(i);
     var vSugeridos = new Array();
     //console.log("En escalonado");
@@ -1105,7 +1215,7 @@ function completaBase(mat, m, n, tOrtogonal){
             }
         }
         //Si no se encontró,
-        if(!c){
+        if (!c) {
             //Agregamos una sugerencia de vector con j actual.
             vecUnoGen(vSugeridos, n, j);
         }
@@ -1118,8 +1228,8 @@ function completaBase(mat, m, n, tOrtogonal){
     var mAnt = m;
 
     //Estamos recorriendo en orden inverso. Recordemos que los vectores cero irán a la parte inferior. Por lo tanto, cuando no encontremos uno, podemos terminar.
-    for(var i = (m - 1); i >= 0; i--){
-        if(!vecZ(mat, m, n, i))
+    for (var i = (m - 1); i >= 0; i--) {
+        if (!vecZ(mat, m, n, i))
             break;
         //Quitamos vector
         vecCrop(mat, m, n, i);
@@ -1129,22 +1239,22 @@ function completaBase(mat, m, n, tOrtogonal){
     }
 
     //Identificamos si existen vectores l.d. en la base proporcionada, en cuyo caso fueron completados. Proseguimos a proponer vectores faltantes.
-    for(var i = mAnt + 1; i < n; i++)
+    for (var i = mAnt + 1; i < n; i++)
         vecUnoGen(vSugeridos, n, i);
 
     var mSchmid = new Array();
     //Copiemos los vectores propuestos y las bases a un solo arreglo
-    pos.forEach((loc)=>{
+    pos.forEach((loc) => {
         //Agregamos los vectores no reducidos
-        var disp = loc*n;
-        for(var i = disp; i < disp + n; i++)
+        var disp = loc * n;
+        for (var i = disp; i < disp + n; i++)
             mSchmid.push(mOrig[i]);
     });
 
     //Unimos las bases con los vectores sugeridos
     mSchmid = mSchmid.concat(vSugeridos);
 
-    if(!tOrtogonal)
+    if (!tOrtogonal)
         return mSchmid;
 
     //Aplicamos Gramm Schmidt
