@@ -1032,19 +1032,19 @@ function baseJordan(mat, m, n, tOrtogonal){
     //Copiemos los vectores propuestos y las bases a un solo arreglo
     pos.forEach((loc)=>{
         //Cortamos un vector con splice, y lo pegamos a los vectores iniciales con concat
-        mShmid.concat(mOrig.splice(loc, n));
+        mSchmid.concat(mOrig.splice(loc, n));
     });
 
     //Unimos las bases con los vectores sugeridos
-    mShmid.concat(vSugeridos);
+    mSchmid.concat(vSugeridos);
 
     //Aplicamos Gramm Schmidt, iniciando en el último vector de una base.
     //Las bases no serán perpendiculares entre si, para no alterarlas, pero los vectores sugeridos serán perpendiculares a las bases
-    grammsh2(mShmid, n, n, (tOrtogonal) ? (1) : (pos.length));
+    grammsh2(mSchmid, n, n, (tOrtogonal) ? (1) : (pos.length));
 
     //La función que invoque a mShmid sabe que la dimensión será de n x n, debido a que se "completa" la base.
     //Intentos de usar matrices donde m > n resultarán en el colapso a una matriz n x n en Gauss Jordan, debido a teoremas.
-    return mShmid;
+    return mSchmid;
 
 }
 
