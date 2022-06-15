@@ -26,7 +26,7 @@ font-family:Arial ;
 	text-align:center;
 	background-color: #4C0027;	
 	width:100%;
-	height: 80px;	
+	height: 130px;	
 	color: #fff;
 	font-family: 'Roboto', sans-serif;
 	font-weight: 500;
@@ -36,14 +36,15 @@ font-family:Arial ;
 
 #p-principal{
 	position: relative;
-	top:25%;	
+	top:5%;
+
 }
 
 #menu{
 	
 	background-color: #750550;
 	width: 100%;
-	height: 70px;
+	height: 110px;
 	
 	
 }
@@ -52,7 +53,7 @@ font-family:Arial ;
 
 	background-color: #750550;
 	width: 100%;
-	height: 70px;
+	height: 100px;
 
 
 }
@@ -62,7 +63,7 @@ font-family:Arial ;
 	
 	margin: auto;
 	margin-top: 5%;
-	width: 80%;
+	width: 90%;
 	
 
 }
@@ -70,6 +71,7 @@ font-family:Arial ;
 
 table{
 	
+	margin:auto;
 	background-color: #FFDFE9;
 	border-radius: 5px;
 	text-align: center;
@@ -79,7 +81,7 @@ table{
 
 input:not([name="currOp"]){
 	
-	font-size: 20px;
+	font-size: 30px;
 	background-color:#E9ADCD;
 	text-align: center;
 	width: 100%;
@@ -91,7 +93,7 @@ input:not([name="currOp"]){
 
 input[name="currOp"]{
 
-	font-size: 20px;
+	font-size: 30px;
 	background-color:#E9ADCD;
 	text-align: center;
 	border:#FFBCD1;
@@ -102,12 +104,11 @@ input[name="currOp"]{
 
 #inv{
 	
-	margin: auto;
-	margin-bottom: 20%;
+	margin: auto;	
 	background-color:#FFFFFF;
 	text-align: center;
-	width: 70%;
-	height:50%;
+	width: 80%;
+	height:80%;
 	border:#DCDCDC;
 	border-radius: 8px;
 	
@@ -133,10 +134,11 @@ input[name="currOp"]{
 #ties{
 	
 	margin: auto;
+	
 	background-color:#DCDCDC;
 	text-align: center;
-	width: 80%;
-	height:80%;
+	width: 70%;
+	height:70%;
 	border:#DCDCDC;
 	border-radius: 8px;
 	
@@ -145,12 +147,12 @@ input[name="currOp"]{
 
 #gauss{
 	
-	margin: auto;
-	margin-bottom: 20%;
+	margin: auto;	
 	background-color:#FFFFFF;
 	text-align: center;
-	width: 70%;
-	height:50%;
+	width: 80%;
+	height:80%;
+	
 	border:#DCDCDC;
 	border-radius: 8px;
 	table-layout:fixed;
@@ -175,8 +177,8 @@ input[name="currOp"]{
 	margin: auto;	
 	background-color:#DCDCDC;
 	text-align: center;
-	width: 80%;
-	height:80%;
+	width: 70%;
+	height:70%;
 	border:#DCDCDC;
 	border-radius: 8px;
 	
@@ -190,8 +192,8 @@ input[name="currOp"]{
 	margin: auto;
 	background-color:#FFFFFF;
 	text-align: center;
-	width: 50%;
-	height:50%;
+	width: 80%;
+	height:80%;
 
 	border:#DCDCDC;
 	border-radius: 8px;
@@ -229,8 +231,8 @@ input[name="currOp"]{
 	margin: auto;
 	background-color:#FFFFFF;
 	text-align: center;
-	width: 50%;
-	height:50%;
+	width: 80%;
+	height:80%;
 
 	border:#DCDCDC;
 	border-radius: 8px;
@@ -240,12 +242,19 @@ input[name="currOp"]{
 }
 
 #gram th tbody{
+
 	display:inline-block;
 
 }
 #gram table{
-
+	
 	background-color:#DCDCDC;
+}
+
+#gramsh{
+	
+	width: 60%;
+
 }
 
 #tges{
@@ -267,8 +276,8 @@ input[name="currOp"]{
 	margin: auto;
 	background-color:#FFFFFF;
 	text-align: center;
-	width: 50%;
-	height:50%;
+	width: 80%;
+	height:80%;
 
 	border:#DCDCDC;
 	border-radius: 8px;
@@ -286,6 +295,8 @@ input[name="currOp"]{
 	background-color:#DCDCDC;
 }
 
+
+
 #tbes{
 
 	margin: auto;
@@ -298,13 +309,18 @@ input[name="currOp"]{
 
 }
 
+#cbase{
+	
+	width:80%;
+}
+
 #cbaseo{
 
 	margin: auto;
 	background-color:#FFFFFF;
 	text-align: center;
-	width: 50%;
-	height:50%;
+	width: 80%;
+	height:80%;
 
 	border:#DCDCDC;
 	border-radius: 8px;
@@ -335,21 +351,21 @@ input[name="currOp"]{
 }
 
 
-.suma-resta{
+.suma-resta:not([hidden="true"]){
 	
 	display: inline-block;
-	font-size: 20px; 
+	font-size: 30px; 
 	width: auto;
 	height:auto;
 }
 
 
-.suma-resta{
+.suma-resta:not([hidden="true"]){
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 30px;
-	height: 30px;
+	width: 40px;
+	height: 40px;
 	background: #141414;
 	color: #fff;
 	font-family: 'Roboto', sans-serif;
@@ -364,7 +380,7 @@ input[name="currOp"]{
 	overflow: hidden;
 }
 
-.suma-resta span {
+.suma-resta:not([hidden="true"]) span {
 	position: relative;
 	z-index: 2;
 	transition: .3s ease all;
@@ -392,8 +408,8 @@ input[name="currOp"]{
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 110px;
-	height: 30px;
+	width: 120px;
+	height: 40px;
 	background: #141414;
 	color: #fff;
 	font-family: 'Roboto', sans-serif;
@@ -464,8 +480,8 @@ input[type="checkbox"]{
 	
 	appearance:none;
 	-webkit-appearance:none;
-	height: 30px;
-	width: 30px;
+	height: 40px;
+	width: 40px;
 	background-color:#DCDCDC; 
 	border-radius: 5px;
 	cursor: pointer;
@@ -478,7 +494,7 @@ input[type="checkbox"]{
 label{
 	
 	color:#EDEDED;
-	font-size: 20px;
+	font-size: 30px;
 	font-family: 'Roboto', sans-serif;
 	font-weight: 500;
 	cursor: pointer;
@@ -513,6 +529,7 @@ input[type="checkbox"]:checked:after{
 	display:inline-block;
 }
 
+
 input[error="true"]{
 	
 	background: #FF3B3E;
@@ -524,4 +541,7 @@ input[error="true"]{
 	text-align: center;
 	padding: 20px;
 }
+
+
+
 
