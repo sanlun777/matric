@@ -1,0 +1,435 @@
+<!DOCTYPE html5>
+<html>
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for HTML5 for Linux version 5.7.45">
+  <script src="fraction.min.js"></script>
+  <script src="matric.js"></script>
+  <script>
+        if(screen.width>1024){
+
+                console.log('resolucion mayor a 1024');
+                document.write('<link rel="stylesheet" href="styles.css">');
+
+        }else{
+
+                console.log('resolucion menor a 1024');
+                document.write('<link rel="stylesheet" href="styles_telefono.css">');
+        }
+  </script>
+  <link rel="stylesheet" href=
+  "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <title></title>
+</head>
+<body>
+  <div id="main-container">
+    <div id="title">
+      <h1 id="p-principal">Calculadora de matrices</h1>
+      <div id="menu" class="wrapped">
+        <input type="radio" name="currOp" id="gjrd" checked='true'
+        onclick='muestraGJ();'> <label for="gjrd">Matrices</label>
+        <input type="radio" name="currOp" id="cbrd" onclick=
+        'muestraCB();'> <label for="cbrd">Cambio de base</label>
+        <input type="radio" name="currOp" id="gsrd" onclick=
+        'muestraGS();'> <label for="gsrd">Gramm-Shmidt</label>
+        <input type="radio" name="currOp" id="combrd" onclick=
+        'muestraComB();'> <label for="combrd">Completa Base</label>
+      </div>
+    </div>
+    <div id="cambio-container" ondragover="manejoArrastre(event);"
+    ondrop="manejoSueltacb(event);" hidden="true">
+      <table id="bases">
+        <tr>
+          <th>
+            <div id="table-container">
+              <table id="bases" onchange="calculaBase();">
+                <tr>
+				
+                  <th>
+                    <h1>De:</h1>
+                  </th>
+				  <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                  <th>
+                    <h1>A:</h1>
+                  </th>
+                </tr>
+				
+                <tr>
+                  <th>
+				  
+                    <table id='baseA'>
+                      <tbody id='baseAmat'>
+                        <tr id='baseA1'>
+                          <th id='baseA1.1'><input id='baseA1,1'
+                          placeholder='0'></th>
+                          <th id='baseA1.2'><input id='baseA1,2'
+                          placeholder='0'></th>
+                        </tr>
+                        <tr id='baseA2'>
+                          <th id='baseA2.1'><input id='baseA2,1'
+                          placeholder='0'></th>
+                          <th id='baseA2.2'><input id='baseA2,2'
+                          placeholder='0'></th>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </th>
+				  <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                  <th>
+                    <table id='baseB'>
+                      <tbody id='baseBmat'>
+                        <tr id='baseB1'>
+                          <th id='baseB1.1'><input id='baseB1,1'
+                          placeholder='0'></th>
+                          <th id='baseB1.2'><input id='baseB1,2'
+                          placeholder='0'></th>
+                        </tr>
+                        <tr id='baseB2'>
+                          <th id='baseB2.1'><input id='baseB2,1'
+                          placeholder='0'></th>
+                          <th id='baseB2.2'><input id='baseB2,2'
+                          placeholder='0'></th>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </th>
+                  <th>
+                    <table>
+                      <tr>
+                        <th><button id='baseAredcol' class=
+                        "suma-resta" onclick=
+                        'reduceFila("baseA"); reduceFila("baseB");reduceColumna("baseA"); reduceColumna("baseB");'>
+                        <span>-</span></button></th>
+                        <th><button class="suma-resta" onclick=
+                        'agregaFila("baseA"); agregaFila("baseB"); agregaColumna("baseA"); agregaColumna("baseB");'>
+                        <span>+</span></button></th>
+                      </tr>
+                    </table>
+                  </th>
+                </tr>
+                <tr>
+                  <th>
+                    <table>
+                      <tr>
+                        <th><button id='baseAredfil' class=
+                        "suma-resta" onclick=
+                        'reduceFila("baseA"); reduceFila("baseB");reduceColumna("baseA"); reduceColumna("baseB");'>
+                        <span>-</span></button></th>
+                      </tr>
+                      <tr>
+                        <th><button class="suma-resta" onclick=
+                        'agregaFila("baseA"); agregaFila("baseB"); agregaColumna("baseA"); agregaColumna("baseB");'>
+                        <span>+</span></button></th>
+                      </tr>
+                    </table>
+                  </th>
+                  <th></th>
+                </tr>
+              </table><button class="limpieza" onclick=
+              'limpiaMat("baseA");'>
+              <div class="icono">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                height="16" fill="currentcolor" class=
+                "bi bi-trash-fill" viewbox="0 0 16 16">
+                <path d=
+                "M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z">
+                </path></svg>
+              </div><span>Limpiar matriz</span></button>
+            </div>
+          </th>
+          <th></th>
+        </tr>
+      </table>
+
+      <div id='mcambio'>
+        <h1>Matriz de Cambio de Base</h1>
+        <table id='tces'>
+          <tbody id='ces'>
+
+          </tbody>
+        </table>
+      </div>
+
+      <div id='alertald' hidden='true'>
+        <h1>Los vectores que proporcionaste son ld</h1>
+      </div>
+
+      <div id='errorld' hidden='true'>
+        <h1>Los vectores que proporcionaste son ld, y de distinta dimensión</h1>
+      </div>
+
+      <div id='errorrec' hidden='true'>
+        <h1>Hay un problema con los datos proporcionados</h1>
+      </div>
+    </div>
+    <div id="grammsh-container" ondragover="manejoArrastre(event);"
+    ondrop="manejoSueltagr(event);" hidden="true">
+      <table id="gramsh">
+        <tr>
+          <th>
+            <table id='entrada' onchange='calculaGram();'>
+              <tbody id='gramshmat'>
+                <tr id='gramsh1'>
+                  <th id='gramsh1.1'><input id='gramsh1,1'
+                  placeholder='0'></th>
+                  <th id='gramsh1.2'><input id='gramsh1,2'
+                  placeholder='0'></th>
+                </tr>
+                <tr id='gramsh2'>
+                  <th id='gramsh2.1'><input id='gramsh2,1'
+                  placeholder='0'></th>
+                  <th id='gramsh2.2'><input id='gramsh2,2'
+                  placeholder='0'></th>
+                </tr>
+              </tbody>
+            </table>
+          </th>
+          <th>
+            <table>
+              <tr>
+                <th><button id='gramshredcol' class="suma-resta"
+                onclick=
+                'reduceColumna("gramsh");'><span>-</span></button></th>
+                <th><button class="suma-resta" onclick=
+                'agregaColumna("gramsh");'><span>+</span></button></th>
+              </tr>
+            </table>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <table>
+              <tr>
+                <th><button id='gramshredfil' class="suma-resta"
+                onclick=
+                'reduceFila("gramsh");'><span>-</span></button></th>
+              </tr>
+              <tr>
+                <th><button class="suma-resta" onclick=
+                'agregaFila("gramsh");'><span>+</span></button></th>
+              </tr>
+            </table>
+          </th>
+          <th></th>
+        </tr>
+      </table><button class="limpieza" onclick=
+      'limpiaMat("gramsh");'>
+      <div class="icono">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height=
+        "16" fill="currentcolor" class="bi bi-trash-fill" viewbox=
+        "0 0 16 16">
+        <path d=
+        "M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z">
+        </path></svg>
+      </div><span>Limpiar matriz</span></button>
+
+      <div id='gram'>
+        <h1>Base ortogonal</h1>
+        <table id='tges'>
+          <tbody id='ges'></tbody>
+        </table>
+      </div>
+
+      <div id='errorparsg' hidden="">
+        <h1>Hubo un error al analizar esta matriz. Las celdas
+        problemáticas, (y vacías, distinguidas por [V]) están
+        marcadas en rojo, puede modificarlas</h1>
+      </div>
+
+      <div id='advld' hidden="">
+        <h1>Los vectores proporcionados son l.d. Se genera una base ortogonal para el e.v. generado por los vectores proporcionados</h1>
+      </div>
+
+    </div>
+
+    <div id="cbase-container" ondragover="manejoArrastre(event);"
+    ondrop="manejoSueltacba(event);" hidden="true">
+      <table id="cbase">
+        <tr>
+          <th>
+            <table id='entrada' onchange='calculaCbase();'>
+              <tbody id='cbasemat'>
+                <tr id='cbase1'>
+                  <th id='cbase1.1'><input id='cbase1,1'
+                  placeholder='0'></th>
+                  <th id='cbase1.2'><input id='cbase1,2'
+                  placeholder='0'></th>
+                </tr>
+                <tr id='cbase2'>
+                  <th id='cbase2.1'><input id='cbase2,1'
+                  placeholder='0'></th>
+                  <th id='cbase2.2'><input id='cbase2,2'
+                  placeholder='0'></th>
+                </tr>
+              </tbody>
+            </table>
+          </th>
+          <th>
+            <table>
+              <tr>
+                <th><button id='cbaseredcol' class="suma-resta"
+                onclick=
+                'reduceColumna("cbase");calculaCbase();'><span>-</span></button></th>
+                <th><button class="suma-resta" onclick=
+                'agregaColumna("cbase");calculaCbase();'><span>+</span></button></th>
+              </tr>
+            </table>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <table>
+              <tr>
+                <th><button id='cbaseredfil' class="suma-resta"
+                onclick=
+                'reduceFila("cbase");calculaCbase();'><span>-</span></button></th>
+              </tr>
+              <tr>
+                <th><button class="suma-resta" onclick=
+                'agregaFila("cbase");calculaCbase();'><span>+</span></button></th>
+              </tr>
+            </table>
+          </th>
+          <th></th>
+        </tr>
+      </table><button class="limpieza" onclick=
+      'limpiaMat("cbase");'>
+      <div class="icono">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height=
+        "16" fill="currentcolor" class="bi bi-trash-fill" viewbox=
+        "0 0 16 16">
+        <path d=
+        "M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z">
+        </path></svg>
+      </div><span>Limpiar matriz</span></button>
+
+      <div id='cbaser'>
+        <h1>Base completada</h1>
+        <table id='tbes'>
+          <tbody id='bes'></tbody>
+        </table>
+      </div>
+
+      <div id='cbaseo'>
+        <h1>Base ortogonal</h1>
+        <table id='toes'>
+          <tbody id='oes'></tbody>
+        </table>
+      </div>
+
+      <div id='errorparsg' hidden="">
+        <h1>Hubo un error al analizar esta matriz. Las celdas
+        problemáticas, (y vacías, distinguidas por [V]) están
+        marcadas en rojo, puede modificarlas</h1>
+      </div>
+
+      <div id='advld' hidden="">
+        <h1>Los vectores proporcionados son l.d. Se genera, y se completa una base ortogonal para el e.v. generado por los vectores proporcionados</h1>
+      </div>
+
+    </div>
+
+
+
+    <div id="matriz-container" ondragover="manejoArrastre(event);"
+    ondrop="manejoSuelta(event);">
+      <div id="menu" class="wrapped">
+        <input type="checkbox" id="jordana" checked='true' onclick=
+        'calculaMat();'> <label for="check">Gauss-Jordan</label>
+        <input type="checkbox" id="inversada" checked='true'
+        onclick='calculaMat();'> <label for=
+        "inversada">Inversa</label> <input type="checkbox" id=
+        "determinada" checked='true' onclick='calculaMat();'>
+        <label for="determinada">Determinante</label>
+      </div>
+
+
+      <div id="table-container">
+        <table id="matrize">
+          <tr>
+            <th>
+              <table id='entrada' onchange='calculaMat();'>
+                <tbody id='matrizemat'>
+                  <tr id='matrize1'>
+                    <th id='matrize1.1'><input id='matrize1,1'
+                    placeholder='0'></th>
+                    <th id='matrize1.2'><input id='matrize1,2'
+                    placeholder='0'></th>
+                  </tr>
+                  <tr id='matrize2'>
+                    <th id='matrize2.1'><input id='matrize2,1'
+                    placeholder='0'></th>
+                    <th id='matrize2.2'><input id='matrize2,2'
+                    placeholder='0'></th>
+                  </tr>
+                </tbody>
+              </table>
+            </th>
+            <th>
+              <table>
+                <tr>
+                  <th><button id='matrizeredcol' class="suma-resta"
+                  onclick=
+                  'reduceColumna("matrize");'><span>-</span></button></th>
+                  <th><button class="suma-resta" onclick=
+                  'agregaColumna("matrize");'><span>+</span></button></th>
+                </tr>
+              </table>
+            </th>
+          </tr>
+          <tr>
+            <th>
+              <table>
+                <tr>
+                  <th><button id='matrizeredfil' class="suma-resta"
+                  onclick=
+                  'reduceFila("matrize");'><span>-</span></button></th>
+                </tr>
+                <tr>
+                  <th><button class="suma-resta" onclick=
+                  'agregaFila("matrize");'><span>+</span></button></th>
+                </tr>
+              </table>
+            </th>
+            <th></th>
+          </tr>
+        </table><button class="limpieza" onclick=
+        'limpiaMat("matrize");'>
+        <div class="icono">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16"
+          height="16" fill="currentcolor" class="bi bi-trash-fill"
+          viewbox="0 0 16 16">
+          <path d=
+          "M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z">
+          </path></svg>
+        </div><span>Limpiar matriz</span></button>
+      </div><br>
+      <br>
+      <div id='gauss' hidden="">
+        <h1>Gauss-Jordan</h1>
+        <table id='tres'>
+          <tbody id='res'></tbody>
+        </table>
+      </div>
+      <div id='inv' hidden="">
+        <h1>Inversa</h1>
+        <table id='ties'>
+          <tbody id='ies'></tbody>
+        </table>
+      </div>
+      <div id='det' hidden="">
+        <h1>Determinante</h1>
+        <table id='tdes'>
+          <tbody id='des'></tbody>
+        </table>
+      </div>
+      <div id='error' hidden="">
+        <h1>Hubo un error al analizar esta matriz. Las celdas
+        problemáticas, (y vacías, distinguidas por [V]) están
+        marcadas en rojo, puede modificarlas</h1>
+      </div><br>
+      <br>
+    </div>
+  </div>
+</body>
+</html>
